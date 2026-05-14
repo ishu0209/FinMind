@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinMind AI — Personal Finance Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">Fin<span>Mind</span> <span class="ai-tag">AI</span></div>
+    <nav>
+      <div class="nav-item active" data-page="dashboard">
+        <span>📊</span> Dashboard
+      </div>
+      <div class="nav-item" data-page="expenses">
+        <span>💳</span> Expenses
+      </div>
+      <div class="nav-item" data-page="agent">
+        <span>🤖</span> AI Agent
+      </div>
+      <div class="nav-item" data-page="goals">
+        <span>🎯</span> Goals
+      </div>
+      <div class="nav-item" data-page="analyze">
+        <span>📈</span> Full Analysis
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="agent-status">
+        <div class="pulse"></div>
+        <div>
+          <div class="status-title">Agent Active</div>
+          <div class="status-sub">Monitoring finances</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Finance <span class="hl">Overview</span></div>
+        <div class="page-sub" id="dash-updated">Loading data...</div>
+      </div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card loading">Loading...</div>
+        <div class="stat-card loading">Loading...</div>
+        <div class="stat-card loading">Loading...</div>
+        <div class="stat-card loading">Loading...</div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Spending by Category <span class="badge green">This Month</span></div>
+          <div id="cat-bars" class="bar-chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🤖 AI Insights <span class="badge blue">Auto-generated</span></div>
+          <div id="insights-list"><div class="loading-block">Generating insights...</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recent Transactions <span class="badge green">Latest</span></div>
+        <div id="recent-txns"></div>
+      </div>
+    </section>
+
+    <!-- EXPENSES -->
+    <section class="page" id="page-expenses">
+      <div class="page-header">
+        <div class="page-title">Track <span class="hl">Expenses</span></div>
+        <div class="page-sub">AI auto-categorizes every entry</div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Add New Expense</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <input class="form-input" id="exp-desc" placeholder="e.g. Swiggy dinner" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount (₹)</label>
+              <input class="form-input" id="exp-amount" type="number" placeholder="0" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input class="form-input" id="exp-date" type="date" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select" id="exp-cat">
+                <option value="auto">🤖 Auto-detect (AI)</option>
+                <option value="Food">🍕 Food & Dining</option>
+                <option value="Transport">🚗 Transport</option>
+                <option value="Shopping">🛍 Shopping</option>
+                <option value="Entertainment">🎬 Entertainment</option>
+                <option value="Healthcare">🏥 Healthcare</option>
+                <option value="Bills">⚡ Bills</option>
+                <option value="Investment">📈 Investment</option>
+                <option value="Other">📦 Other</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-primary" id="add-btn" onclick="addExpense()">+ Add Expense</button>
+          <div id="add-result" class="add-result"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Month Summary</div>
+          <div id="exp-summary"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">All Expenses <span class="badge blue" id="exp-count-badge">0 entries</span></div>
+        <div id="all-expenses"></div>
+      </div>
+    </section>
+
+    <!-- AI AGENT -->
+    <section class="page" id="page-agent">
+      <div class="page-header">
+        <div class="page-title">AI <span class="hl">Finance Agent</span></div>
+        <div class="page-sub">Powered by Groq LLaMA 3.3 · Knows your complete financial data</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-header">
+          <div class="ai-avatar">🤖</div>
+          <div>
+            <div class="ai-name">FinMind Agent</div>
+            <div class="ai-online"><span class="pulse small"></span> Online · Real-time data access</div>
+          </div>
+          <button class="clear-btn" onclick="clearChat()">Clear Chat</button>
+        </div>
+        <div class="chips" id="chips">
+          <div class="chip" onclick="sendChip(this)">Where am I overspending?</div>
+          <div class="chip" onclick="sendChip(this)">How can I save ₹10,000 more?</div>
+          <div class="chip" onclick="sendChip(this)">Give me a monthly budget plan</div>
+          <div class="chip" onclick="sendChip(this)">Best investment options for me</div>
+          <div class="chip" onclick="sendChip(this)">Analyze my spending patterns</div>
+          <div class="chip" onclick="sendChip(this)">How to reach my Europe Trip goal?</div>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chat-input" rows="1"
+            placeholder="Ask your AI finance agent anything..."
+            onkeydown="handleKey(event)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">Send ↗</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="page" id="page-goals">
+      <div class="page-header">
+        <div class="page-title">Savings <span class="hl">Goals</span></div>
+        <div class="page-sub">AI tracks progress and adjusts advice automatically</div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Active Goals</div>
+          <div id="goals-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Add New Goal</div>
+          <div class="form-grid">
+            <div class="form-group" style="grid-column:1/-1">
+              <label class="form-label">Goal Name</label>
+              <input class="form-input" id="goal-name" placeholder="e.g. New Bike" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target (₹)</label>
+              <input class="form-input" id="goal-target" type="number" placeholder="100000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Already Saved (₹)</label>
+              <input class="form-input" id="goal-saved" type="number" placeholder="0" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Monthly Contribution (₹)</label>
+              <input class="form-input" id="goal-monthly" type="number" placeholder="5000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Icon</label>
+              <input class="form-input" id="goal-icon" placeholder="🎯" value="🎯" />
+            </div>
+          </div>
+          <button class="btn-primary" onclick="addGoal()">+ Add Goal</button>
+          <div id="goal-result" class="add-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FULL ANALYSIS -->
+    <section class="page" id="page-analyze">
+      <div class="page-header">
+        <div class="page-title">AI Full <span class="hl">Analysis</span></div>
+        <div class="page-sub">Agent analyzes all your data and generates a complete financial report</div>
+      </div>
+      <div style="text-align:center;margin-bottom:28px;">
+        <button class="btn-primary big" id="analyze-btn" onclick="runAnalysis()">
+          🤖 Run Full AI Analysis
+        </button>
+      </div>
+      <div id="analysis-result" style="display:none">
+        <div class="analysis-hero" id="analysis-hero"></div>
+        <div class="two-col" style="margin-top:20px">
+          <div class="card" id="analysis-left"></div>
+          <div class="card" id="analysis-right"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
