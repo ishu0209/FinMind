@@ -3,9 +3,9 @@ FinMind AI - Frontend static file server
 Run this to serve the frontend on port 3001
 """
 
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI # type: ignore[import]
+from fastapi.staticfiles import StaticFiles # type: ignore[import]
+from fastapi.responses import HTMLResponse # type: ignore[import]
 import os
 
 app = FastAPI()
@@ -19,5 +19,5 @@ async def index():
         return f.read()
 
 if __name__ == "__main__":
-    import uvicorn
+    import uvicorn # type: ignore[import]
     uvicorn.run("server:app", host="0.0.0.0", port=3001, reload=True)
